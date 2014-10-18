@@ -1,0 +1,119 @@
+<html>
+{% load i18n %}
+<head>
+<title>Отчет по приему больных</title>
+<script src="{{ STATIC_URL }}js/jquery.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css">
+<!-- Последняя компиляция и сжатый CSS
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<!-- Дополнение к теме -->
+<!--link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"-->
+<!--script src="{{ STATIC_URL }}grapelli/js/jquery.js"></script>
+<-- Последняя компиляция и сжатый JavaScript-->
+<script src="{{ STATIC_URL }}js/main.js"></script>
+<!--script src="{{ STATIC_URL }}grapelli/js/grapelli.js"></script>
+<script src="{{ STATIC_URL }}grapelli/js/SelectBox.js"></script>
+<--script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script-->
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+
+<style>
+p.h {
+color: red;
+left: 200pt;
+}
+.th {
+background-color: gray;
+}
+.short {
+display: none;
+}
+</style>
+<script>
+function spc(){
+    //alert('pushed');
+    //alert($('#hdr').text());
+    //alert($('#vybor').val());
+    var spc_name=$('#vybor option:selected').text();
+    //$.each('table tr',function(){alert($('this').innerHTML);});
+    //alert($('.doc_spec').innerHTML);
+}
+
+$('a.lnk_spec2').live('click',function(){
+    //alert($(this).text());
+    var ind=$('a.lnk_spec2').index(this)+1;
+    //alert('table tr.doc_spec2_'+ind);
+    var c_r=$('table tr.doc_spec2_'+ind);
+
+    //var inside='<table width=100%>'+c_r.eq(ind).text().replace('[','<tr><td>').replace(']','</td></tr>').replace(/,/g,'</td><td>')+'</table>';
+    //alert(c_r.length);
+
+    var _l=c_r.slice(0,c_r.length),
+    c_l = _l.hasClass('short');
+    if (c_l==true) {
+        _l.removeClass('short');
+        //$('.reg_'+ind).addClass('short');
+    } else {
+        _l.addClass('short');
+        //$('.reg_'+ind).removeClass('short');
+    }
+});
+
+</script>
+</head>
+<body>
+<center>
+<!--p>Специализация:<select id=vybor onchange=spc()>
+{% for rc in req_cond %}
+<option value={{ rc.id }}>{{ rc.name }}</option>
+{% endfor %}
+</select>
+</p-->
+
+<p id=hdr class='h'>Отчет о принятых пациентах:</p>
+<!--table width=80% border=1><tr>
+<th width=75%>Специальность</th><th>Количество пациентов<th></tr>
+{% for rd_k, rd_v in req_data.items %}
+    <tr><td class='doc_spec'><a class='lnk_spec' href='#'><b>{{ rd_k }}</b></a></td>
+        <td><i>{{ rd_v.1 }}</i></td>
+    </tr>
+
+    <tr class='doc_spec short'><td>{{ rd_v.0.0 }}</td><td></td></tr>
+
+{% endfor %}
+</table></center><br-->
+
+<center>
+<table width=80% border=1><tr style='font-size:11pt' >
+<th width=65%>Специальность</th><th>Принято пациентов</th><th>Всего талонов</th></tr>
+{% for s in ss %}
+    <tr style="font-size:10pt" class="{{ s.tmpl_ptr_id }}">
+        <td class='doc_spec2'><a class='lnk_spec2' href='#'><b>{{ s.name }}</b></a></td>
+        {% for rd_k, rd_v in req_data.items %}
+            {% ifequal rd_k s.name %}
+                <td><i>{{ rd_v.1 }}</i></td>
+            {% endifequal %}
+        {% endfor %}
+        <td><i>&nbsp;</i></td>
+    </tr>
+
+    {% for d in dd.all %}
+        {% ifequal d.speciality_id_id s.tmpl_ptr_id %}
+
+            <tr style='font-size:9pt' class='doc_spec2_{{ d.speciality_id_id }} short'>
+                <td>{{ d.name }}</td>
+                {% for rec in rslt %}
+                    {% ifequal rec.doctor_id d.tmpl_ptr_id %}
+                        <td>{{ rec.ptn_cnt }}</td>
+                        <td>{{ rec.tck_cnt }}</td>
+                        <!--td class="done_{{ d.speciality_id_id }}">{{ rec.ptn_cnt }}</td>
+                        <td class="reg_{{ d.speciality_id_id }}">{{ rec.tck_cnt }}</td-->
+                    {% endifequal %}
+                {% endfor %}
+            </tr>
+
+        {% endifequal %}
+    {% endfor %}
+
+{% endfor %}
+</table></center><br>
+</body>

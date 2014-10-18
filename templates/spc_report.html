@@ -1,0 +1,16 @@
+{% load i18n %}
+Отчет:<br>
+Врач:
+<select id=docs>
+    
+    <option value=0 />
+<>
+Врач       Количество посещений<br>
+{% for ra in req_answ %}
+    <b>{{ ra.doctor_id }}  {{ ra.cnt }}</b><br>
+{% endfor %}
+
+Пациент       Количество посещений<br>
+{% for ra in req_answ2 %}
+    <b>{{ ra.patient_id }}  {{ ra.cnt2 }}</b><br>
+{% endfor %}

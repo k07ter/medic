@@ -1,0 +1,9 @@
+<script src='{{ STATIC_URL }}bootsrap-3.2.0/css/bootstrap-3.2.0'></script>
+<body>
+<p>Пробка</p>
+<table width=80% ><tr>
+{% for lnk,vlu in links.items %}
+    <td><a href='/{{ lnk }}'><b>{{ vlu.1 }}</b></a></td>
+{% endfor %}
+</tr></table>
+</body>
