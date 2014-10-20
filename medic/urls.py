@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     url(r'^doctor/add$', 'medic.views.new_doctor', name='new_doctor'),
     url(r'^tickets$', 'medic.views.tickets', name='tickets'),
     url(r'^report$', 'medic.views.rep_comm', name='rep_comm'),
+    url(r'^test$', 'medic.views.test'),
     # url(r'^$', 'medic.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
