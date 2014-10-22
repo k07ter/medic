@@ -1,0 +1,7 @@
+    {% if links.items %}
+	<table width=80% ><tr>
+	{% for lnk,vlu in links.items %}
+    		<td><a href='/{{ lnk }}'><b>{{ vlu.1 }}</b></a></td>
+	{% endfor %}
+	</tr></table>
+    {% endif %}

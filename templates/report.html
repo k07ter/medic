@@ -65,12 +65,38 @@ $('a.lnk_spec2').live('click',function(){
 
             <tr style='font-size:9pt' class='doc_spec2_{{ d.speciality_id_id }} short'>
                 <td>{{ d.name }}</td>
+
+<!--
+		{% for ech in TktComm %}
+		    {% ifequal ech.doctor_id d.tmpl_ptr_id %}
+			<td>{{ech.vst}}
+			{% ifequal 'ech.vst' '' %}
+			0
+			{% else %}
+			{{ech.vst}}
+			{% endifequal %}
+			</td><td>{{ech.vse}}
+			{% ifequal 'ech.vse' '' %}
+			0
+			{% else %}
+			{{ech.vse}}
+			{% endifequal %}
+			</td>
+		    {% else %}
+			{{forloop.last}}
+			{% if forloop.last %},{{d.tmpl_ptr_id}}
+			<td>0</td><td>0</td>
+			{% endif %}
+		    {% endifequal %}
+		{% endfor %}
+-->
                 {% for rec in rslt %}
                     {% ifequal rec.doctor_id d.tmpl_ptr_id %}
                         <td>{{ rec.ptn_cnt }}</td>
                         <td>{{ rec.tck_cnt }}</td>
                     {% endifequal %}
                 {% endfor %}
+
             </tr>
 
         {% endifequal %}

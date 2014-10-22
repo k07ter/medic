@@ -1,0 +1,7 @@
+{% load i18n %}
+{% block tools %}
+<form id=loader method="post" action='/loader'>{% crsf_token %}
+    <p>Файл c с данными: <input id=data_src placeholder='Файл'/></p>
+    <input type=submit  value='Загрузить' />
+</form>
+{% endblock %}
