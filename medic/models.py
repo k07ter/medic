@@ -4,14 +4,20 @@ from datetime import datetime as d_t
 
 class Tmpl(models.Model):
     name = models.CharField(max_length=255)
-    
+
+    def get_inf(self, oid=None):
+	so = self.objects
+ 	if oid:
+		return so.filter(pk=oid)
+ 	else:
+		return so.all()
+
     def __unicode__(self):
         return u'%s' % self.name
 
-class Speciality(Tmpl):
-    def get_dct(self, dct_id):
- 	#print dct_id
- 	return Doctor.objects.all()
+class Speciality(Tmpl): pass
+#    def get(self, dct_id):
+# 	return Doctor.objects.all()
 
 class Patient(Tmpl): pass
 

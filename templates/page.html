@@ -1,9 +1,13 @@
-<script src='{{ STATIC_URL }}bootsrap-3.2.0/css/bootstrap-3.2.0'></script>
+<head>
+<link rel="stylesheet" href='{{ STATIC_URL }}bootstrap/css/bootstrap.css'>
+<script src='{{ STATIC_URL }}bootstrap/js/bootstrap.js'></script>
+</head>
 <body>
-<p>Пробка</p>
-<table width=80% ><tr>
-{% for lnk,vlu in links.items %}
-    <td><a href='/{{ lnk }}'><b>{{ vlu.1 }}</b></a></td>
-{% endfor %}
-</tr></table>
+{% block logo %}
+<p><img href="{{ STATIC_URL }}test_fon2.jpg" >Фасад</img></p>
+{% endblock %}
+
+{% block menu %}
+{% include "menu.html" %}
+{% endblock %}
 </body>

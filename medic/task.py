@@ -16,5 +16,20 @@ def load_data(src):
     else:
         print u'Проблемы с файлом %s' % src
 
+def cnter():
+ 	msv = {'dfd': "sdfsdf", "rtg": "egeg", "bgb": "egerg", "fgb": "wqer"}
+ 	#elm = msv_cnt.next()
+ 	#while msv_cnt:
+	#	yield msv_cnt
+	#	#elm = 
+	#	msv_cnt.next()
+
+	def ms():
+	 	for mi in msv.iteritems():
+	 		yield mi
+	#while 1:
+	for _m in ms(): print _m[0], _m[1]
+
 if __name__ == '__main__':
-    load_data('doctor.txt')
+    #load_data('doctor.txt')
+    cnter()

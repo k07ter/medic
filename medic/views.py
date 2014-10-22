@@ -17,19 +17,18 @@ LINKS = {
 
 class Menu:
     def __init__(self, menu):
- 	if type(menu) == 'dict':
- 	 	self.menu = menu.keys()
-		 #)||menu.keys()
- 	 	self.items = menu.values()
- 	 	self.compil()
- 	else: return
+ 	self.out = render_to_response('%s.html' % 'page', {'links': LINKS})
+ 	self.menu = menu.keys()
+	if self.menu:
+ 	 	for itm in self.compil():
+ 	 		print itm #, menu[itm]
+    #def item(self, name):
+    #	return name
 
     def compil(self):
- 	print self.menu
- 	while 1:
- 	 	print self.items
- 	 	yield self.items
- 	 	break
+ 	self.items = (v for v in menu.values())
+ 	for i in self.items:
+ 	 	yield i
 
 def one_page(request):
     paginator = Paginator(list, 10)
@@ -43,6 +42,7 @@ def one_page(request):
         p_list = paginator.page(paginator.num_pages)
 
 def home(request):
+    mnu = Menu(LINKS)
     return render_to_response('%s.html' % 'page', {'links': LINKS})
 
 def output(request):
@@ -60,7 +60,8 @@ def outp():
 
 #@outp()
 def prep(req, trg):
-    tip = req.META['PATH_INFO'].split('/')[1]
+    tip = req.META.get('PATH_INFO', None)
+    if tip: tip = tip.split('/')[1]
     baza = eval(LINKS[tip][0]).objects.all()
     return render_to_response('%s.html' % trg, {'data': tip, 'store': baza})
 
@@ -82,7 +83,8 @@ def patients(request):
 def tickets(request):
     page = 'monitor'
     tip = 'doctor'
-    baza = 'Doctor' #.objects.all()
+    baza = 'Doctor'
+    #.objects.all()
     #print baza
     return render_to_response('%s.html' % page, {'data': tip, 'store': ['baza']})
 
@@ -134,6 +136,7 @@ def new_doctor(request):
         #else:
             #baza4.create(doctor_id_id=int(ln[0])+3,
             #             date_time=datetime.strptime(ln[2],
+
             #                                         '%Y-%m-%d %H:%M:%S').__str__,
             #baza4.filter(doctor).update(patient_id_id=int(ln[3]))
             #baza4.filter(doctor_id_id=int(ln[1]),id=int(ln[1])).update(patient_id=int(ln[3])+7)
@@ -162,20 +165,59 @@ def rep_comm(request):
  	
     # Все пришедшие пациенты
     _data = tck.filter(Q(patient_id__isnull=False))
-    _t = tck.values('doctor_id').annotate(ptn_cnt=Count('patient_id'))
+    _t = _data.values('doctor_id').annotate(ptn_cnt=Count('patient_id'))
 
     #TODO: Получить словарь с количетвом посещений и талонов для каждого врача
     _rpt = _t.annotate(tck_cnt=Count('doctor_id'))
     #_rpt = _rpt.annotate(ptn_cnt=Count('patient_id')) #.values() #'doctor_id', 'ptn_cnt')
     #print Tickets.objects.get(doctor_id=11)
-    print _rpt.values('doctor_id','tck_cnt','ptn_cnt')
+    #print _rpt.values('doctor_id','tck_cnt','ptn_cnt')
     #print _rpt.values('doctor_id','tck_cnt','tck_cnt')
     _data_r = []
     _data_rpt = {}
     _spc = Speciality.objects
+    #print _spc.filter(tmpl_ptr_id__in=[1]).values()
     _spc2 = Speciality.objects.all()
-    _doc = Doctor.objects
     _cond = _spc2.values()
+    _doc = Doctor.objects
+    #print _doc.filter(speciality_id=1).values('name','speciality_id__tmpl_ptr__name')
+
+    """tck_qry = tck.extra(select={'speciality__id': 'doctor_id__speciality_id__tmpl_ptr__id'},
+    			tables=['medic_speciality'],
+    			where=['speciality__id=1'])
+
+    print tck_qry.values() #'doctor_id','patient','tickets')#.count()
+    """  
+
+    #dct = Doctor()
+    #print _doc.tmpl_ptr_set.all()
+    #print dct.prof()
+    
+    #spc = Speciality()
+    #print spc.get_inf()
+    #tck = tck.filter(Q(patient_id__isnull=True)|Q(patient_id__isnull=False))
+    talony = tck.values('doctor_id__speciality_id__tmpl_ptr__id')#,'doctor_id','patient_id')
+    #print talony
+    #tck2 = talony.filter(patient_id__isnull=False)
+    #print talony.count()
+    tck_done = talony.annotate(vst=Count('patient_id'))
+    #tck_r2 = tck_done.values() #'doctor_id', 'vse')
+    #print tck_r2 #.filter(doctor_id=11)
+
+    #tck_r_a = tck_r.annotate(reg=Count('patient_id'))#.values('doctor_id','reg','vsego')
+    #print tck_r_a
+    #talony = tck2.values('doctor_id','vsego')    #print talony
+
+    #talony = tck.filter(doctor_id__speciality_id__tmpl_ptr__id=1).values()
+    tck_done = tck_done.annotate(vse=Count('doctor_id__speciality_id__tmpl_ptr__id'))
+    t_rep = tck_done
+    ##t_rep = tck_done.values('doctor_id','vse','vst')
+    t_comm = tck_done.values('vse','vst')
+    #print tck_done
+    #print t_rep #.count() #annotate(t_up=Count('patient_id')).values('doctor_id','srez')
+    #talony = tck.filter(doctor_id__speciality_id__tmpl_ptr__id)#=3).values() #'doctor_id','patient_id')
+    #print td #talony.annotate(Count('patient_id')).values()
+
     for _s in _cond:
         _dr = _doc.filter(speciality_id_id=_s['tmpl_ptr_id'])
  	#.values() #'tmpl_ptr_id') #,'name')#.get('speciality_id')
@@ -193,7 +235,7 @@ def rep_comm(request):
                                'req_lst': _data,
                                'req_cond': _cond,
                                'ss': _spc2, 'dd': _doc,
-                               'tt': tck,'rslt': _rpt},
+                               'tt': tck,'rslt': _rpt, 'TktRep': t_rep, 'TktComm': t_comm},
                                context_instance=RequestContext(request))
 
 def test(request):

@@ -51,10 +51,13 @@ $('a.lnk_spec2').live('click',function(){
         <td class='doc_spec2'><a class='lnk_spec2' href='#'><b>{{ s.name }}</b></a></td>
         {% for k, v in req_data.items %}
             {% ifequal k s.name %}
-                <td><i>{{ v.1 }}</i></td>
+		{% for t_rp in TktRep %}
+		    {% ifequal t_rp.doctor_id__speciality_id__tmpl_ptr__id s.id %}
+			<td><i>{{ t_rp.vst }}</i></td><td><b>{{ t_rp.vse }}</b></td>
+		    {% endifequal %}
+	    	{% endfor %}
             {% endifequal %}
         {% endfor %}
-        <td><i>{{ dd.get_prof }},{{ v.2 }}</i></td>
     </tr>
 
     {% for d in dd.all %}
